@@ -14,10 +14,13 @@ app.use(cookieParser());
 app.get('/clientes', verifyJWT, (req, res, next) => { 
     console.log("Retornou todos clientes!");
     var token = req.headers['x-access-token'];
-    console.log(token)
-    lendoToken() 
-
-    res.status(200).json([{id:1,nome:'luiz'}]);
+    var base64Url = token.split('.')[1];
+    console.log(token +  ":::::" + base64Url)
+    var buf = Buffer.from(base64Url, 'base64');
+    let text = buf.toString('utf-8');
+    const profile = JSON.parse(text)
+    console.log(profile)
+    res.status(200).json([{id:profile.id,nome:'luiz'}]);
 }) 
 
 //rota de login
@@ -63,6 +66,3 @@ server.listen(3000);
 console.log("Servidor escutando na porta 3000...")
 
 
-function lendoToken(token){
-    token.toString('base64')
-}
